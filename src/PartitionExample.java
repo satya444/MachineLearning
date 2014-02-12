@@ -18,34 +18,36 @@ public class PartitionExample {
 	public static void main(String args[]){
 		//System.out.println("Enter names of dataset and partitionset inputs");
 		int a[]= new int[2];
-	//	Pattern p = Pattern.compile("-*");
+		Pattern p = Pattern.compile("-*");
 		File datasetf= new File("C:\\Users\\Dilip\\Desktop\\ML\\input.txt");
 		try {
 			Scanner readdataset= new Scanner(datasetf);
-			
-			if(readdataset.hasNext()){
-				
-	//			Scanner temp=readdataset.skip(p);
-				
-			//	System.out.println("printing"+temp);
-				a[0]=readdataset.nextInt();
-				a[1]=readdataset.nextInt();
-
+			//readdataset.useDelimiter(p);
+			if(readdataset.findInLine("-") != null){
+				readdataset.next();
 			}
+			//else{
+			a[0]= readdataset.nextInt();
+			a[1]=readdataset.nextInt();
+			//}
+			System.out.println(a[0] +"     "+a[1]);
 			int input[][]= new int[a[0]][a[1]];
 			int j =0;
 			int k =0;
 			while(readdataset.hasNext()){
-				//readdataset.skip(p);
-				input[j][k]= readdataset.nextInt();
-				if(k<a[1]-1){
-					k++;
+				if(readdataset.findInLine("-") != null){
+					readdataset.next();
 				}
 				else{
-					j++;
-					k=0;
+					input[j][k]= readdataset.nextInt();
+					if(k<a[1]-1){
+						k++;
+					}
+					else{
+						j++;
+						k=0;
+					}
 				}
-
 			}
 			for(int m =0; m<a[0]; m++){
 				for(int n=0; n<a[1]; n++){
@@ -55,11 +57,15 @@ public class PartitionExample {
 			}
 
 
-
 			File partitionset = new File("C:\\Users\\Dilip\\Desktop\\ML\\partition.txt");
 			Scanner readpartition = new Scanner(partitionset);
+			//readpartition.useDelimiter(p);
 			//List<ArrayList> l = new ArrayList<>();
 			HashMap<String, ArrayList<Integer>> h = new HashMap();
+			//readpartition.skip(p);
+//			Scanner readpartition = new Scanner(partitionset);
+			//List<ArrayList> l = new ArrayList<>();
+	//		HashMap<String, ArrayList<Integer>> h = new HashMap();
 			while(readpartition.hasNext()){
 				//readpartition.skip(p);
 				String line = readpartition.nextLine();
