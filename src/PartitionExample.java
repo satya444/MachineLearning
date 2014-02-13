@@ -16,21 +16,21 @@ import java.util.regex.Pattern;
 
 public class PartitionExample {
 	public static void main(String args[]){
-		//System.out.println("Enter names of dataset and partitionset inputs");
+		System.out.println("Enter names of the files dataset input-partition output-partition");
+		Scanner infiles = new Scanner(System.in);
+		String datasetfile=infiles.next();
+		String partition=infiles.next();
+		String outputfile=infiles.next();
 		int a[]= new int[2];
 		Pattern p = Pattern.compile("-*");
-		File datasetf= new File("C:\\Users\\Dilip\\Desktop\\ML\\input.txt");
+		File datasetf= new File(datasetfile);
 		try {
 			Scanner readdataset= new Scanner(datasetf);
-			//readdataset.useDelimiter(p);
 			if(readdataset.findInLine("-") != null){
 				readdataset.nextLine();
 			}
-			//else{
 			a[0]= readdataset.nextInt();
 			a[1]=readdataset.nextInt();
-			//}
-			System.out.println(a[0] +"     "+a[1]);
 			int input[][]= new int[a[0]][a[1]];
 			int j =0;
 			int k =0;
@@ -49,27 +49,17 @@ public class PartitionExample {
 					}
 				}
 			}
-			for(int m =0; m<a[0]; m++){
-				for(int n=0; n<a[1]; n++){
-					System.out.print(input[m][n]);
-				}
-				System.out.println();
-			}
 
 
-			File partitionset = new File("C:\\Users\\Dilip\\Desktop\\ML\\partition.txt");
+			File partitionset = new File(partition);
 			Scanner readpartition = new Scanner(partitionset);
 			HashMap<String, ArrayList<Integer>> h = new HashMap();
 			while(readpartition.hasNext()){
 				if(readpartition.findInLine("-") != null){
-					
-					System.out.println("here");
 						readpartition.nextLine();
-				}//readpartition.skip(p);
+				}
 				else{
-					System.out.println("111");
 					String line = readpartition.nextLine();
-					System.out.println(line);
 					StringTokenizer str = new StringTokenizer(line);
 					int i =0;
 					ArrayList<Integer> al = new ArrayList();
@@ -80,13 +70,9 @@ public class PartitionExample {
 					h.put(id,al);
 				}
 			}
-			for(String s : h.keySet()){
-				System.out.println(s+" "+h.get(s));
-			}
 			double totent= entropy(input);
 
-			System.out.println("target entropy"+ totent);
-			individualentropies(input,h);
+			individualentropies(input,h,outputfile);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -94,11 +80,10 @@ public class PartitionExample {
 	}
 
 	private static void individualentropies(int[][] input,
-			HashMap<String, ArrayList<Integer>> h) {
+			HashMap<String, ArrayList<Integer>> h,String outputfile) {
 		HashMap<String, Map<String,Double>> gains = new HashMap();
 		String id = h.keySet().iterator().next();
 		for(String s : h.keySet()){
-			System.out.println("id isssssss"+s);
 			ArrayList<Integer> l = new ArrayList();
 			l= h.get(s);
 			Iterator<Integer> itr = l.iterator();
@@ -120,7 +105,6 @@ public class PartitionExample {
 		for(String s: gains.keySet()){
 			Map<String,Double> temp= gains.get(s);
 			String attr= temp.keySet().iterator().next();
-			System.out.println("attr is "+ attr);
 			double tempgain = temp.get(attr);
 			if(tempgain>=maxgain){
 				maxgain = tempgain;
@@ -129,9 +113,8 @@ public class PartitionExample {
 			}
 		}
 
-		System.out.println("gain is"+maxgain);
-		System.out.println("next part is"+nextpartition);
-		System.out.println("division is" + divided);
+		System.out.println("next part is---------------------- "+nextpartition);
+		System.out.println("division is according to column--- " + divided);
 		ArrayList<Integer> l= h.get(nextpartition);
 		int c[][]=new int[l.size()][];
 		Iterator<Integer> it= l.iterator();
@@ -150,11 +133,9 @@ public class PartitionExample {
 		for(int k=0; k<c.length; k++){
 			if(c[k][coldiv]==0){
 				zeros.add(tracking.get(k));
-
 			}
 			if(c[k][coldiv]==1){
 				ones.add(tracking.get(k));
-
 			}
 			if(c[k][coldiv]==2){
 				twos.add(tracking.get(k));
@@ -175,9 +156,8 @@ public class PartitionExample {
 			h.put(s, twos);
 		}
 		for(String s : h.keySet()){
-			System.out.println(s+" "+h.get(s));
 		}
-		File file = new File("C:\\Users\\Dilip\\Desktop\\ML\\output.txt");
+		File file = new File(outputfile);
 		try {
 			file.createNewFile();
 		}
@@ -194,7 +174,6 @@ public class PartitionExample {
 				ArrayList<Integer> li = h.get(s);
 				Iterator<Integer> itr = li.iterator();
 				while(itr.hasNext()){
-
 					bw.write(String.valueOf(itr.next()));
 					bw.write(" ");
 				}
@@ -206,11 +185,7 @@ public class PartitionExample {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
-
-
-
 
 	private static Map<String, Double> groupone(int[][] b,int totlen) {
 		double totent = entropy(b);
@@ -235,7 +210,6 @@ public class PartitionExample {
 				maxindex = String.valueOf(j); 
 			}
 		}	
-		//double partialgain= (double)(b.length)*maxgain/(double)totlen;
 		subarr.put(maxindex,maxgain);
 		return subarr;
 	}
@@ -263,7 +237,6 @@ public class PartitionExample {
 			int flag0=0;
 			int flag1=0;
 			int flag2=0;
-
 			for(int i=0; i<a.length;i++){
 				if(a[i]== j){
 					if(a[i]==0){
@@ -288,59 +261,45 @@ public class PartitionExample {
 			}
 			if(countzero==0){
 				partialentzer=0;
-				System.out.println("partialentz"+partialentzer);
 			}
 			else if(flag0==1){
-				//	if(a[i]==0){
 				double p =((double )countzero)/((double)countzeroina);
 				partialentzer= p*(Math.log(1/p))/(Math.log(2));
-				System.out.println("partialentz"+partialentzer);
 			}
 			else if(flag1==1){
-				//	if(a[i]==0){
 				double p =((double )countzero)/((double)countoneina);
 				partialentzer= p*(Math.log(1/p))/(Math.log(2));
-				System.out.println("partialentz"+partialentzer);
 			}
 			else if(flag2==1){
-				//	if(a[i]==0){
 				double p =((double )countzero)/((double)counttwoina);
 				partialentzer= p*(Math.log(1/p))/(Math.log(2));
-				System.out.println("partialentz"+partialentzer);
 			}
 			if(countone==0){
 				partialentone=0;
-				System.out.println("partialone"+partialentone);
 			}
 			else if(flag0==1){
 				double p =((double )countone)/((double)countzeroina);
 				partialentone= p*(Math.log(1/p))/(Math.log(2));
-				System.out.println("partialone"+partialentone);
 			}
 			else if(flag1==1){
 				double p =((double )countone)/((double)countoneina);
 				partialentone= p*(Math.log(1/p))/(Math.log(2));
-				System.out.println("partialone"+partialentone);
 			}
 			else if(flag2==1){
 				double p =((double )countone)/((double)counttwoina);
 				partialentone= p*(Math.log(1/p))/(Math.log(2));
-				System.out.println("partialone"+partialentone);
 			}
 			if(j==0){
 				entgivzero=partialentone+partialentzer;
 				zerosina= countzeroina;
-				System.out.println("zerogain"+entgivzero);
 			}
 			if(j==1){
 				entgivone=partialentone+partialentzer;
 				onesina=countoneina;
-				System.out.println("onegain"+entgivone);
 			}
 			if(j==2){
 				entgivtwo=partialentone+partialentzer;
 				twosina=counttwoina;
-				System.out.println("twogain"+entgivtwo);
 			}
 		}
 		entropyzero=((double)(zerosina)/(double)a.length)*entgivzero;
@@ -348,13 +307,10 @@ public class PartitionExample {
 		entropytwo=((double)(twosina)/(double)a.length)*entgivtwo;
 		entgiva=(entropyzero+entropyone+entropytwo);
 		gain=totent-entgiva;
-		System.out.println("totent is "+ totent);
-		System.out.println("gain plzzzzzzzzzzzzzzzzzz"+ gain);
 		return gain;
 	}
 
 	private static double entropy(int[][] input) {
-		System.out.println("length is"+input.length);
 		int horlength= input[0].length;
 		int countzero=0;
 		int countone=0;
@@ -366,17 +322,16 @@ public class PartitionExample {
 				countone++;
 			}
 		}
-		System.out.println("zero countis"+ countzero);
 		double targetentropy= 0;
 		double zeroent= (double)countzero/(input.length);
-		System.out.println("zeroent is "+zeroent);
 		double zerocont=0;
 		if(zeroent==0){
 			zerocont=0;
 		}
 		else{
 			zerocont=(zeroent*Math.log(1/zeroent))/(Math.log(2));
-		}double oneent = (double)countone/(input.length);
+		}
+		double oneent = (double)countone/(input.length);
 		double onecont=0;
 		if(oneent==0){
 			onecont=0;
@@ -385,11 +340,10 @@ public class PartitionExample {
 			onecont= (oneent*Math.log(1/oneent))/(Math.log(2));
 		}
 		targetentropy= zerocont+onecont;
-
 		return targetentropy;
 	}
-
 }
+
 
 
 
