@@ -24,7 +24,7 @@ public class PartitionExample {
 			Scanner readdataset= new Scanner(datasetf);
 			//readdataset.useDelimiter(p);
 			if(readdataset.findInLine("-") != null){
-				readdataset.next();
+				readdataset.nextLine();
 			}
 			//else{
 			a[0]= readdataset.nextInt();
@@ -59,24 +59,26 @@ public class PartitionExample {
 
 			File partitionset = new File("C:\\Users\\Dilip\\Desktop\\ML\\partition.txt");
 			Scanner readpartition = new Scanner(partitionset);
-			//readpartition.useDelimiter(p);
-			//List<ArrayList> l = new ArrayList<>();
 			HashMap<String, ArrayList<Integer>> h = new HashMap();
-			//readpartition.skip(p);
-//			Scanner readpartition = new Scanner(partitionset);
-			//List<ArrayList> l = new ArrayList<>();
-	//		HashMap<String, ArrayList<Integer>> h = new HashMap();
 			while(readpartition.hasNext()){
-				//readpartition.skip(p);
-				String line = readpartition.nextLine();
-				StringTokenizer str = new StringTokenizer(line);
-				int i =0;
-				ArrayList<Integer> al = new ArrayList();
-				String id =str.nextToken();
-				while(str.hasMoreTokens()){
-					al.add(Integer.parseInt(str.nextToken()));
+				if(readpartition.findInLine("-") != null){
+					
+					System.out.println("here");
+						readpartition.nextLine();
+				}//readpartition.skip(p);
+				else{
+					System.out.println("111");
+					String line = readpartition.nextLine();
+					System.out.println(line);
+					StringTokenizer str = new StringTokenizer(line);
+					int i =0;
+					ArrayList<Integer> al = new ArrayList();
+					String id =str.nextToken();
+					while(str.hasMoreTokens()){
+						al.add(Integer.parseInt(str.nextToken()));
+					}
+					h.put(id,al);
 				}
-				h.put(id,al);
 			}
 			for(String s : h.keySet()){
 				System.out.println(s+" "+h.get(s));
@@ -166,7 +168,7 @@ public class PartitionExample {
 		if(!ones.isEmpty()){
 			String s= nextpartition+"1";
 			h.put(s, ones);
-			
+
 		}
 		if(!twos.isEmpty()){
 			String s= nextpartition+"2";
@@ -176,35 +178,35 @@ public class PartitionExample {
 			System.out.println(s+" "+h.get(s));
 		}
 		File file = new File("C:\\Users\\Dilip\\Desktop\\ML\\output.txt");
-			try {
-				file.createNewFile();
-			}
-			catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		try {
+			file.createNewFile();
 		}
-	try{
-		FileWriter fw = new FileWriter(file.getAbsoluteFile());
-		BufferedWriter bw = new BufferedWriter(fw);
-		for(String s : h.keySet()){
-			bw.write(s);
-			bw.write(" ");
-			ArrayList<Integer> li = h.get(s);
-			Iterator<Integer> itr = li.iterator();
-			while(itr.hasNext()){
-				
-				bw.write(String.valueOf(itr.next()));
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try{
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			for(String s : h.keySet()){
+				bw.write(s);
 				bw.write(" ");
+				ArrayList<Integer> li = h.get(s);
+				Iterator<Integer> itr = li.iterator();
+				while(itr.hasNext()){
+
+					bw.write(String.valueOf(itr.next()));
+					bw.write(" ");
+				}
+				bw.newLine();
 			}
-			bw.newLine();
+			bw.close();
 		}
-		bw.close();
-	}
-	catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 
@@ -261,7 +263,7 @@ public class PartitionExample {
 			int flag0=0;
 			int flag1=0;
 			int flag2=0;
-			
+
 			for(int i=0; i<a.length;i++){
 				if(a[i]== j){
 					if(a[i]==0){
@@ -289,23 +291,23 @@ public class PartitionExample {
 				System.out.println("partialentz"+partialentzer);
 			}
 			else if(flag0==1){
-			//	if(a[i]==0){
+				//	if(a[i]==0){
 				double p =((double )countzero)/((double)countzeroina);
 				partialentzer= p*(Math.log(1/p))/(Math.log(2));
 				System.out.println("partialentz"+partialentzer);
 			}
 			else if(flag1==1){
 				//	if(a[i]==0){
-					double p =((double )countzero)/((double)countoneina);
-					partialentzer= p*(Math.log(1/p))/(Math.log(2));
-					System.out.println("partialentz"+partialentzer);
-				}
+				double p =((double )countzero)/((double)countoneina);
+				partialentzer= p*(Math.log(1/p))/(Math.log(2));
+				System.out.println("partialentz"+partialentzer);
+			}
 			else if(flag2==1){
 				//	if(a[i]==0){
-					double p =((double )countzero)/((double)counttwoina);
-					partialentzer= p*(Math.log(1/p))/(Math.log(2));
-					System.out.println("partialentz"+partialentzer);
-				}
+				double p =((double )countzero)/((double)counttwoina);
+				partialentzer= p*(Math.log(1/p))/(Math.log(2));
+				System.out.println("partialentz"+partialentzer);
+			}
 			if(countone==0){
 				partialentone=0;
 				System.out.println("partialone"+partialentone);
@@ -380,7 +382,7 @@ public class PartitionExample {
 			onecont=0;
 		}
 		else{
-		 onecont= (oneent*Math.log(1/oneent))/(Math.log(2));
+			onecont= (oneent*Math.log(1/oneent))/(Math.log(2));
 		}
 		targetentropy= zerocont+onecont;
 
